@@ -22,7 +22,7 @@ module FactoryToys
     end
 
     def split_by_row(data)
-      data.split("\n").map(&:strip).find_all{|str| !str.blank?}
+      data.split("\n")
     end
 
     def process_element(rows, row)

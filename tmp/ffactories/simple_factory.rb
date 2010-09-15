@@ -1,6 +1,3 @@
-SETTLEMENT_METHODS = [DCC_DCC = {:buy => 'dcc from dcc', :to => 'dcc to dcc'},
-                      REG_REG = {:buy => 'reg from reg', :to => 'reg to reg'}
-                      ]
 feature = <<-Data
   Test Instruction Queue and Processiung
   In order to ensure the Back Office Processes work as expected
@@ -10,7 +7,7 @@ Data
 
 ing_feature = {
   :foreach => [:direction, :settlement_method],
-  :direction => ['buy', 'sell'],
+  :direction => [:buy, :sell],
   :settlement_method => SETTLEMENT_METHODS
 }
 

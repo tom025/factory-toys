@@ -4,13 +4,16 @@ module FactoryToys
     attr_accessor :data
 
     def initialize(filename)
-      @output = ''
       @filename = filename
-      #build_output(filename)
+
+      @output = "# Auto Generated Features\n"
+      @output += "# Generated: #{Time.now.to_s}\n"
+      @output += "# Source File: #{@filename}\n\n"
+
     end
 
     def write
-      filname = @filename.gsub(/.rb/,'.feature')
+      filename = File.basename(@filename, '.rb') + '.feature'
       File.open(FactoryToys.features_location + "/" + filename, 'w') do |f|
         f.puts self.output
       end
@@ -19,36 +22,35 @@ module FactoryToys
     def output
       eval(self.data[:base])
 
-      self.build_feature(self.data[:feature])
+      self.add_feature(self.data[:feature])
 
       locals = self.send(:local_variables)
       scenarios = locals.find_all{|var| var =~ /_#{FactoryToys.scenarios}$/}
-      scenarios.each do |scenario|
-        options = get_options(scenario)
+      scenarios.each do |scenario_name|
+        feature = eval(scenario_name)
+        options = get_options(feature)
         options.each do |option|
-          eval(self.get_option_string(scenario, option))
-          option =~ /^(.+)_#{FactoryToys.scenarios}$/
+          eval(self.option_string(feature, option))
+          scenario_name =~ /^(.+)_#{FactoryToys.scenarios}$/
           identifier = $1
-          scenario = "#{identifer}_#{FactoryToys.scenario}"
-          raise MissingScenarioError, scenario unless scenarios[scenario]
-          eval(scenarios[scenario])
-          output += scenario + "\n\n"
+          scenario = "#{identifier}_#{FactoryToys.scenario}".to_sym
+          raise MissingScenarioError, scenario unless self.data[scenario]
+          eval(self.data[scenario])
+          @output += eval(scenario.to_s) + "\n\n"
         end
       end
+      @output
     end
 
     def add_feature(feature)
       raise FactoryToys::MissingFeatureDefinitionError if feature.blank?
-      output += feature
-    end
-
-    def add_scenario(scenario, options)
-
+      eval(feature)
+      @output += eval('feature') + "\n\n"
     end
 
     def data
       return @data if @data
-      file = File.open(FactoryToys.source_location + "/" + @filename, 'r')
+      file = File.open(@filename, 'r')
       @data = Parser.new(file.read).elements
     end
 
@@ -56,7 +58,22 @@ module FactoryToys
       return '' unless scenario[:foreach]
       foreach = get_option_types(scenario[:foreach], false)
       raise InternalForEachError unless foreach.size == option.size
-      foreach.map(&:to_s).join(', ') + ' = ' + option.map(&:to_s).join(', ')
+      foreach.map(&:to_s).join(', ') + ' = ' + option.map{|o| self.write_value(o)}.join(', ')
+    end
+
+    def write_value(o)
+      case o
+      when Symbol
+        return ":#{o}"
+      when String
+        return "'#{o}'"
+      when Numeric
+        return o.to_s  
+      when Array
+        "[#{o.map{|v| self.write_value(v).join(',')}}]"
+      when Hash
+        "{#{o.map{|k,v| self.write_value(k) + ' => ' + self.write_value(v)}.join(', ')}}"
+      end
     end
 
     def get_options(scenario)

@@ -1,3 +1,4 @@
+
 module FactoryToys
   class MissingEnvironmentError < StandardError; end
   class CloseTagNotFoundError < StandardError; end
@@ -28,7 +29,7 @@ module FactoryToys
 
     protected
     def source_files
-      Dir.glob(self.source_location, '*')
+      Dir.glob(self.source_location + '/*.rb')
     rescue Errno::ENOENT => e
       return "Source Directory Does not exist: #{self.source_directory}"
     end

@@ -36,17 +36,17 @@ describe FactoryToys::Parser do
         run_factory[:base].should == "test='testing'\ngreeting='Hello Again'"
       end
 
-      it "removes blank lines" do
+      it "does not remove blank lines" do
         run_factory("\n\ndate='Dont look at me??'")[:base].should ==
-          "test='testing'\ngreeting='Hello Again'\ndate='Dont look at me??'"
+          "test='testing'\ngreeting='Hello Again'\n\n\ndate='Dont look at me??'"
       end
 
       it "when named variables only" do
         string = <<-Data
-        other_string = <<-TestData
-          value=test
-        TestData
-        Data
+other_string = <<-TestData
+value=test
+TestData
+Data
         parser = FactoryToys::Parser.new(string)
 
         parser.elements[:base].should == ''
@@ -57,12 +57,12 @@ describe FactoryToys::Parser do
 
       def run_factory(additional_text='')
         string = <<-Data
-        test='testing'
-        other_string = <<-TestData
-          value=test
-        TestData
-        greeting='Hello Again'
-        Data
+test='testing'
+other_string = <<-TestData
+value=test
+TestData
+greeting='Hello Again'
+Data
         parser = FactoryToys::Parser.new(string + additional_text)
         parser.elements
       end

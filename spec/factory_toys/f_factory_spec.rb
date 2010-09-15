@@ -1,11 +1,5 @@
 require 'spec_helper'
 
-#implemented here to get tests to pass as in Rails Environment and not ruby core??
-class String
-  def blank?
-    self.nil? or self == ''
-  end
-end
 
 describe FactoryToys::FFactory do
   before do
