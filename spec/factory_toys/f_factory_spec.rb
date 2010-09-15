@@ -20,7 +20,7 @@ describe FactoryToys::FFactory do
 
   context '#get_options' do
     it 'with no options' do
-      get_options({}).should == []
+      get_options({}).should == [[]]
     end
 
     it 'with a single foreach option' do

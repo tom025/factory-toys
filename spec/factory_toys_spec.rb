@@ -2,7 +2,10 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "FactoryToys" do
   before do
-    Object.const_set(:RAILS_ROOT, Dir.pwd + '/' + File.dirname(__FILE__) + '/../tmp/empty') unless Object.const_defined?(:RAILS_ROOT)
+    path = File.dirname(__FILE__)
+    path += Dir.pwd + '/' unless path[0..0] == '/'
+    Object.send(:remove_const, :RAILS_ROOT) if Object.const_defined?(:RAILS_ROOT)
+    Object.const_set(:RAILS_ROOT, path + '/../tmp/empty') 
   end
 
   context '#update_features' do
@@ -57,9 +60,11 @@ describe "FactoryToys" do
 
     context 'actually produce a file' do
       it 'creates a file' do
-        FileUtils.rm_r(FactoryToys.features_location + '/*', :force => true)
         Object.send(:remove_const, :RAILS_ROOT)
-        Object.const_set(:RAILS_ROOT, Dir.pwd + '/' + File.dirname(__FILE__) + '/../tmp')
+        path = File.dirname(__FILE__)
+        path += Dir.pwd + '/' unless path[0..0] == '/'
+        Object.const_set(:RAILS_ROOT, path + '/../tmp')
+        FileUtils.rm_r(FactoryToys.features_location + '/*', :force => true)
         FactoryToys.update_features
       end
     end

@@ -1,6 +1,6 @@
 # Auto Generated Features
-# Generated: Wed Sep 15 16:47:45 +0100 2010
-# Source File: /Users/tom025/rails/factory-toys/./spec/../tmp/ffactories/simple_factory.rb
+# Generated: Wed Sep 15 18:31:15 +0100 2010
+# Source File: /Users/tom025/rails/factory-toys/spec/../tmp/ffactories/simple_factory.rb
 
   Test Instruction Queue and Processiung
   In order to ensure the Back Office Processes work as expected

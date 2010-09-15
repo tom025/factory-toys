@@ -28,10 +28,21 @@ module FactoryToys
     def process_element(rows, row)
       if rows[row] =~ /^[\s]*([^\s]+)[\s]*=[\s]*<<-([^\s]+)[\s]*$/
         name, start_text = $1, $2
+        self.make_instance_variable(rows, row)
         rows = self.extract_element(rows, row, name, start_text)
         return rows, row
       else
+        self.make_instance_variable(rows, row)
         return rows, row + 1
+      end
+    end
+
+    def make_instance_variable(rows, row)
+      if rows[row] =~ /^([\s]*)([^\s]+)([\s]*)=(.*)$/
+        unless [':','"','"','@'].include?($2[0..0]) or
+            ['>'].include?($4[0..0])
+          rows[row] = "#{$1}@#{$2}#{$3}=#{$4}"
+        end
       end
     end
 

@@ -12,13 +12,20 @@ describe FactoryToys::Parser do
     it 'returns straight text in the under :base' do
       parser = FactoryToys::Parser.new('hello="hello there"')
       parser.elements.should ==
-        {:base => 'hello="hello there"'}
+        {:base => '@hello="hello there"'}
     end
 
     it 'returns straight text in the under :base with multiple lines' do
-      parser = FactoryToys::Parser.new('hello="hello there"\ngoodbye="bye bye"')
+      parser = FactoryToys::Parser.new("hello='hello there'\ngoodbye='bye bye'")
       parser.elements.should ==
-        {:base => 'hello="hello there"\ngoodbye="bye bye"'}
+        {:base => "@hello='hello there'\n@goodbye='bye bye'"}
+    end
+
+    it 'does not break hashs' do
+      parser = FactoryToys::Parser.new("hello_hash = {\n:hello='hello there',\n:goodbye='bye bye'}")
+      parser.elements.should ==
+        {:base => "@hello_hash = {\n:hello='hello there',\n:goodbye='bye bye'}"}
+
     end
 
     context 'extracting from multi-line comment' do
@@ -27,18 +34,18 @@ describe FactoryToys::Parser do
       end
 
       it 'removes excess white space' do
-        run_factory[:other_string].should == "other_string = <<-TestData\n" +
+        run_factory[:other_string].should == "@other_string = <<-TestData\n" +
                                      "value=test\n" +
                                      "TestData"
       end
 
       it "returns unextracted data" do
-        run_factory[:base].should == "test='testing'\ngreeting='Hello Again'"
+        run_factory[:base].should == "@test='testing'\n@greeting='Hello Again'"
       end
 
       it "does not remove blank lines" do
         run_factory("\n\ndate='Dont look at me??'")[:base].should ==
-          "test='testing'\ngreeting='Hello Again'\n\n\ndate='Dont look at me??'"
+          "@test='testing'\n@greeting='Hello Again'\n\n\n@date='Dont look at me??'"
       end
 
       it "when named variables only" do
@@ -50,7 +57,7 @@ Data
         parser = FactoryToys::Parser.new(string)
 
         parser.elements[:base].should == ''
-        parser.elements[:other_string].should == "other_string = <<-TestData\n" +
+        parser.elements[:other_string].should == "@other_string = <<-TestData\n" +
                                      "value=test\n" +
                                      "TestData"
       end

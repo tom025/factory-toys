@@ -3,13 +3,18 @@ module FactoryToys
     attr_accessor :filename
     attr_accessor :data
 
+    def method_missing(name, *args, &block)
+      value = eval("@#{name}")
+      return value if value
+      super(name, *args, &block)
+    end
+
     def initialize(filename)
       @filename = filename
 
       @output = "# Auto Generated Features\n"
       @output += "# Generated: #{Time.now.to_s}\n"
       @output += "# Source File: #{@filename}\n\n"
-
     end
 
     def write
@@ -21,31 +26,45 @@ module FactoryToys
     
     def output
       eval(self.data[:base])
-
       self.add_feature(self.data[:feature])
-
-      locals = self.send(:local_variables)
-      scenarios = locals.find_all{|var| var =~ /_#{FactoryToys.scenarios}$/}
-      scenarios.each do |scenario_name|
-        feature = eval(scenario_name)
-        options = get_options(feature)
-        options.each do |option|
-          eval(self.option_string(feature, option))
-          scenario_name =~ /^(.+)_#{FactoryToys.scenarios}$/
-          identifier = $1
-          scenario = "#{identifier}_#{FactoryToys.scenario}".to_sym
-          raise MissingScenarioError, scenario unless self.data[scenario]
-          eval(self.data[scenario])
-          @output += eval(scenario.to_s) + "\n\n"
-        end
-      end
+      conf_names = self.instance_variables
+      self.process_file(conf_names)
       @output
     end
 
-    def add_feature(feature)
-      raise FactoryToys::MissingFeatureDefinitionError if feature.blank?
-      eval(feature)
+    def add_feature(feature_def)
+      raise FactoryToys::MissingFeatureDefinitionError if feature_def.blank?
+      eval(feature_def)
       @output += eval('feature') + "\n\n"
+    end
+
+    def process_file(conf_names)
+      scenarios = conf_names.find_all{|var| var =~ /_#{FactoryToys.scenarios}$/}
+      scenarios.each do |feature_name|
+        self.process_scenarios(feature_name)
+      end
+    end
+
+    def process_scenarios(feature_name)
+      feature = eval(feature_name)
+      options = self.get_options(feature)
+      options.each do |option|
+        self.add_scenario(feature, option, feature_name)
+      end
+    end
+
+    def add_scenario(feature, option, feature_name)
+      eval(self.option_string(feature, option))
+      scenario_name = self.get_scenario_name(feature_name)
+      raise MissingScenarioError, scenario_name unless self.data[scenario_name]
+      eval(self.data[scenario_name])
+      @output += eval(scenario_name.to_s) + "\n\n"
+    end
+
+    def get_scenario_name(feature_name)
+      feature_name =~ /^@(.+)_#{FactoryToys.scenarios}$/
+      identifier = $1
+      return "#{identifier}_#{FactoryToys.scenario}".to_sym
     end
 
     def data
@@ -77,18 +96,19 @@ module FactoryToys
     end
 
     def get_options(scenario)
-      all_options = []
+      all_options = [[]]
       if scenario[:foreach]
         self.get_option_types(scenario[:foreach]).each do |element|
-          raise MissingForeachListError, element.to_s unless scenario[element].is_a?(Array)
-          if all_options.empty?
-            all_options = scenario[element].map{|element_value| [element_value]}
-          else
-            all_options = add_option(all_options, scenario[element])
-          end
+          all_options = process_options(all_options, scenario[element], element)
         end
       end
       return all_options
+    end
+
+    def process_options(all_options, elements, element)
+      raise MissingForeachListError, element.to_s unless elements.is_a?(Array)
+#      return elements.map{|element_value| [element_value]} if all_options.empty?
+      return self.add_option(all_options, elements)
     end
 
     def add_option(all_options, elements)
