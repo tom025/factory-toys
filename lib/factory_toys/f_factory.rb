@@ -1,6 +1,6 @@
 module FactoryToys
   class FFactory # Feature Factory
-    attr_accessor :output, :filename
+    attr_accessor :filename
     attr_accessor :data
 
     def initialize(filename)
@@ -9,7 +9,14 @@ module FactoryToys
       #build_output(filename)
     end
 
-    def output(filename)
+    def write
+      filname = @filename.gsub(/.rb/,'.feature')
+      File.open(FactoryToys.features_location + "/" + filename, 'w') do |f|
+        f.puts self.output
+      end
+    end
+    
+    def output
       eval(self.data[:base])
 
       self.build_feature(self.data[:feature])

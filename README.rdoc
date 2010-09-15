@@ -1,30 +1,26 @@
 = FactoryToys
 
-This is a idea to help with Feature Management and works in a as a set of
-feature configuration files that can use ruby to do fancy things and ultimately
-simplify the process of updating your features.
+  This is a idea to help with Feature Management and works in a as a set of
+  feature configuration files that can use ruby to do fancy things and ultimately
+  simplify the process of updating your features.
 
-The tool is designed to be use where you need to manage large numbers of
-features which all have very similar featureset (i.e. only one of two difference)
+  The tool is designed to be use where you need to manage large numbers of
+  features which all have very similar featureset (i.e. only one of two difference)
 
 == Can't I just use Scenario Outlines to do this I hear you ask..
 
-You some it it you can.. but the things you can't:
+  You some it it you can.. but the things you can't:
 
 * Use a parameter to slightly change you hook configuration
-* Output actual features which is my mind makes fixing any breaks in the test
-  easier.
+* Output actual features which is my mind makes fixing any breaks in the test easier.
 
 
 == ToDo
 
 * Allow scenarios to be built from parts rather than just as a block of text
-  => allow common parts of features to only be specified once and then shared
-     basically
-* Add functionality to only rebuild the feature file if there has been a change
-  most likely using fssm once I have a look and understand how it works..
-* Add other configuration options.. Not really sure what else is needed but
-  am sure somthing will turn up
+  - allow common parts of features to only be specified once and then shared basically
+* Add functionality to only rebuild the feature file if there has been a change most likely using fssm once I have a look and understand how it works..
+* Add other configuration options.. Not really sure what else is needed but am sure somthing will turn up
 * Fix the readme so it is not quite so much of a ramble.
 * Add exmaple code to the readme so that people can see how this should work
 * Add generator so that templates can be generated

@@ -20,6 +20,12 @@ module FactoryToys
       raise MissingEnvironmentError
     end
 
+    def features_location
+      @features_location = ::RAILS_ROOT + '/' + self.features_directory
+    rescue NameError
+      raise MissingEnvironmentError
+    end
+
     protected
     def source_files
       Dir.glob(self.source_location, '*')
@@ -30,7 +36,8 @@ module FactoryToys
     public
     def update_features
       self.source_files.each do |file|
-        FactoryToys::FFactory.new(file)
+        ft = FactoryToys::FFactory.new(file)
+        ft.write
       end
     end
   end

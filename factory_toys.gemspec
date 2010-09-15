@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Henry", "Thomas Brand"]
   s.date = %q{2010-09-15}
-  s.description = %q{TODO: longer description of your gem}
-  s.email = %q{tom025@mac.com}
+  s.description = %q{Simplify Feature Management}
+  s.email = %q{dw_henry@yahoo.com.au}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{TODO: one-line summary of your gem}
+  s.summary = %q{Simplify Feature Management}
   s.test_files = [
     "spec/factory_toys/f_factory_spec.rb",
      "spec/factory_toys/parser_spec.rb",
