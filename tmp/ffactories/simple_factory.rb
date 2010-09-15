@@ -8,13 +8,13 @@ feature = <<-Data
   wants to ensure trades process through queues as required
 Data
 
-ing_tests = {
-  :for_each => [:direction, :settlement_method],
+ing_feature = {
+  :foreach => [:direction, :settlement_method],
   :direction => ['buy', 'sell'],
   :settlement_method => SETTLEMENT_METHODS
 }
 
-ing_test_scenario = <<-Data1
+ing_scenario = <<-Data1
   @selenium @#{direction}_trade_ticket_requirements @login_as_middle_office
   Ing Trade Ticket Instructions - #{direction} #{settlement_method[direction]}
     Given I am on the Instructions Screen

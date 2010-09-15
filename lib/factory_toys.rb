@@ -1,17 +1,14 @@
 module FactoryToys
   class MissingEnvironmentError < StandardError; end
-  
+  class CloseTagNotFoundError < StandardError; end
+  class MissingForeachListError < StandardError; end
+  class InternalForEachError < StandardError; end
+  class MissingScenarioError < StandardError; end
+
   class << self
     attr_accessor :features_directory, :source_directory
     attr_accessor :factories
-
-    def factories_directory
-      @features_directory ||= 'features'
-    end
-
-    def source_directory
-      @source_directory ||= 'ffactories'
-    end
+    attr_accessor :scenario, :scenarios
 
     def factories
       @factories ||= []
@@ -39,4 +36,10 @@ module FactoryToys
   end
 
   autoload :FFactory, 'factory_toys/f_factory'
+  autoload :Parser, 'factory_toys/parser'
 end
+
+FactoryToys.scenarios = 'feature'
+FactoryToys.scenario = 'scenario'
+FactoryToys.features_directory = 'features'
+FactoryToys.source_directory = 'ffactories'

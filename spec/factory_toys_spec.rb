@@ -34,6 +34,16 @@ describe "FactoryToys" do
         FactoryToys.update_features
       end
     end
+
+    context 'scenario configuration' do
+      it 'default scenario text' do
+        FactoryToys.scenario.should == 'scenario'
+      end
+
+      it 'default scenarios text' do
+        FactoryToys.scenarios.should == 'feature'
+      end
+    end
   end
 
 end
