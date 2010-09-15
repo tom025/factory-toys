@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{factory_toys}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David Henry", "Thomas Brand"]
   s.date = %q{2010-09-15}
-  s.description = %q{Simplify Feature Management}
+  s.description = %q{TODO: longer description of your gem}
   s.email = %q{tom025@mac.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "factory_toys.gemspec",
      "lib/factory_toys.rb",
      "lib/factory_toys/f_factory.rb",
      "lib/factory_toys/parser.rb",
@@ -37,7 +38,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{Simplify Feature Management}
+  s.summary = %q{TODO: one-line summary of your gem}
   s.test_files = [
     "spec/factory_toys/f_factory_spec.rb",
      "spec/factory_toys/parser_spec.rb",
