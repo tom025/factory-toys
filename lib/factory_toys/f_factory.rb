@@ -27,7 +27,17 @@ module FactoryToys
     def data
       return @data if @data
       file = File.open(FactoryToys.source_location + "/" + @filename, 'r')
-      @data = file.read
+      @data = split_data(file.read)
+    end
+
+    def split_data(data)
+      rows = data.split("\n")
+
+      while rows.size > 0
+        if rows[0] =~ /^[\s]*([^\s]+)[\s]*=[\s]*(<<-)([^\s]+)[\s]*$/
+          
+        end
+      end
     end
   end
 end
