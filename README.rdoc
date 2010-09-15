@@ -1,19 +1,80 @@
 = FactoryToys
 
-  This is a idea to help with Feature Management and works in a as a set of
-  feature configuration files that can use ruby to do fancy things and ultimately
-  simplify the process of updating your features.
+This is a idea to help with Feature Management and works in a as a set of
+feature configuration files that can use ruby to do fancy things and ultimately
+simplify the process of updating your features.
 
-  The tool is designed to be use where you need to manage large numbers of
-  features which all have very similar featureset (i.e. only one of two difference)
+The tool is designed to be use where you need to manage large numbers of
+features which all have very similar featureset (i.e. only one of two difference)
 
 == Can't I just use Scenario Outlines to do this I hear you ask..
 
-  You some it it you can.. but the things you can't:
+Yes some of it you can.. but the things you can't:
 
-* Use a parameter to slightly change you hook configuration
-* Output actual features which is my mind makes fixing any breaks in the test easier.
+* Use a parameter to slightly change your hook configuration
+* Output actual features which is my mind makes fixing any breaks in the test easier as the feature runs each step on the screen.
 
+== Usage
+
+Add the following lines of code tyo you capybara/cucumber env.rb file
+
+  require 'factory_toys'
+  FactoryToys.update_features
+
+=== Configuration Options:
+
+Set the Directory to read the configuration files from
+
+  FactoryToys.source_directory = 'ffactories'
+
+Set the Directory to save the features to
+
+  FactoryToys.features_directory = 'features'
+
+Set the naming convention for the configuration options
+
+  FactoryToys.scenarios = 'feature'
+
+Set the naming convention for the scenario template
+
+  FactoryToys.scenario = 'scenario'
+
+=== Configuration File
+
+The configuration file is made up of three main parts:
+
+*FEATURE DESCRIPTION*
+
+So the text to go at the top of the feature. This is mandatory and should be input as a multi line text.
+
+  feature = <<- FEATURE_DESCRIPTION
+  -- your feature description here --
+  FEATURE_DESCRIPTION
+
+*CONFIGURATION OPTIONS*
+
+This is used to define the grouping and output options in a hash.
+
+  my_feature = {:foreach => [:dow], :option1 => ['Sun','Mon','Tue','Wed','Thu','Fri','Sat','Sun']}
+
+As this is straight ruby code you can you any helper, constants, etc that you can think of here.
+
+The variable name used should be in the format:
+  <identifier>_feature
+
+*SCENARIO TEMPLATE*
+
+This is the Scenario that will be generated with the above options. This is should be input as a multi line text.
+
+  my_scenario = <<- SCENARIO_TEMPLATE
+    @setup_#{dow}_settings
+    Given David is Better than Tom
+    When Tom is Great
+    Then Dave is Better
+  SCENARIO_TEMPLATE
+
+The variable name used should be in the format:
+  <identifier>_scenario
 
 == ToDo
 
@@ -22,7 +83,6 @@
 * Add functionality to only rebuild the feature file if there has been a change most likely using fssm once I have a look and understand how it works..
 * Add other configuration options.. Not really sure what else is needed but am sure somthing will turn up
 * Fix the readme so it is not quite so much of a ramble.
-* Add exmaple code to the readme so that people can see how this should work
 * Add generator so that templates can be generated
 * Rename the gem to FeatureToys (Did I fcuk up or what)
 
