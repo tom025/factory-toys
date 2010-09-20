@@ -5,6 +5,7 @@ module FactoryToys
   class MissingForeachListError < StandardError; end
   class InternalForEachError < StandardError; end
   class MissingScenarioError < StandardError; end
+  class UnknownInlineError < StandardError; end
 
   class << self
     attr_accessor :features_directory, :source_directory

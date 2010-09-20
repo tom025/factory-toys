@@ -1,5 +1,5 @@
 # Auto Generated Features
-# Generated: Wed Sep 15 18:31:15 +0100 2010
+# Generated: Mon Sep 20 10:55:43 +0100 2010
 # Source File: /Users/tom025/rails/factory-toys/spec/../tmp/ffactories/simple_factory.rb
 
   Test Instruction Queue and Processiung

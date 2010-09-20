@@ -39,7 +39,7 @@ module FactoryToys
 
     def make_instance_variable(rows, row)
       if rows[row] =~ /^([\s]*)([^\s]+)([\s]*)=(.*)$/
-        unless [':','"','"','@'].include?($2[0..0]) or
+        unless [':','"',"'",'@'].include?($2[0..0]) or
             ['>'].include?($4[0..0])
           rows[row] = "#{$1}@#{$2}#{$3}=#{$4}"
         end
@@ -47,12 +47,24 @@ module FactoryToys
     end
 
     def extract_element(rows, row, name, start_text)
-      end_row = find_row(rows, row, start_text)
-      elements[name.to_sym] = rows[row..end_row].join("\n")
+      end_row = find_closure_text(rows, row, start_text)
+      elements[name.to_sym] = self.element_string(rows[row..end_row])
       (row == 0 ? [] : rows[0..row-1]) + rows[end_row+1..-1]
     end
 
-    def find_row(rows, row, start_text)
+    def element_string(element_rows)
+      element_rows.map! do |row|
+        if row =~ /^[\s]*<< ([^\s]+)[\s]*$/
+          raise UnknownInlineError, $1 unless elements[$1.to_sym]
+          elements[$1.to_sym].split("\n")[1..-2]
+        else
+          row
+        end
+      end
+      return element_rows.join("\n")
+    end
+
+    def find_closure_text(rows, row, start_text)
       rows[row..-1].each_with_index do |row_text, i|
         return row + i if row_text.strip == start_text
       end

@@ -76,10 +76,29 @@ This is the Scenario that will be generated with the above options. This is shou
 The variable name used should be in the format:
   <identifier>_scenario
 
+To Simplify the logic parts of the SCENARIO TEMNPLATE can be shared as follows
+
+  shared_scenario_part <<-DATA
+    @setup_#{dow}_settings
+    Given David is Better than Tom
+    When Tom is Great
+  DATA
+
+  my_first_scenario = <<- SCENARIO_TEMPLATE
+    << shared_scenario_part
+    Then Dave is Better
+  SCENARIO_TEMPLATE
+
+  my_second_scenario = <<- SCENARIO_TEMPLATE
+    << shared_scenario_part
+    And There is cake
+    Then Dave eats cake
+  SCENARIO_TEMPLATE
+
+Note the use of '<< ' to insert the shared element
+
 == ToDo
 
-* Allow scenarios to be built from parts rather than just as a block of text
-  - allow common parts of features to only be specified once and then shared basically
 * Add functionality to only rebuild the feature file if there has been a change most likely using fssm once I have a look and understand how it works..
 * Add other configuration options.. Not really sure what else is needed but am sure somthing will turn up
 * Fix the readme so it is not quite so much of a ramble.

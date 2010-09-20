@@ -74,5 +74,68 @@ Data
         parser.elements
       end
     end
+
+    context 'with inline data sharing' do
+      it 'supports unline use of existing elements' do
+        string = <<-Data
+string_one = <<-Str1
+This is the test
+Str1
+string_two = <<-Str2
+This is an inline test
+<< string_one
+Str2
+Data
+
+        parser = FactoryToys::Parser.new(string)
+
+        parser.elements[:base].should == ''
+        parser.elements[:string_one].should == "@string_one = <<-Str1\n" +
+                      "This is the test\n" +
+                      "Str1"
+
+        parser.elements[:string_two].should == "@string_two = <<-Str2\n" +
+                      "This is an inline test\n" +
+                      "This is the test\n" +
+                      "Str2"
+      end
+
+      it 'supports inline use of multi-line existing elements' do
+        string = <<-Data
+string_one = <<-Str1
+This is the test
+And so is this
+Str1
+string_two = <<-Str2
+This is an inline test
+<< string_one
+Str2
+Data
+
+        parser = FactoryToys::Parser.new(string)
+
+        parser.elements[:base].should == ''
+
+        parser.elements[:string_two].should == "@string_two = <<-Str2\n" +
+                      "This is an inline test\n" +
+                      "This is the test\n" +
+                      "And so is this\n" +
+                      "Str2"
+      end
+
+      it 'when invalid inline element raises an error' do
+        string = <<-Data
+string_one = <<-Str1
+This is the test
+Str1
+string_two = <<-Str2
+This is an inline test
+<< string_error
+Str2
+Data
+
+        lambda{ FactoryToys::Parser.new(string) }.should raise_error FactoryToys::UnknownInlineError, "string_error"
+      end
+    end
   end
 end
