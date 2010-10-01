@@ -12,7 +12,8 @@ module FactoryToys
     def initialize(filename)
       @filename = filename
 
-      @output = "# Auto Generated Features\n"
+      @output = "#last update: #{File.mtime(@file_name)}"
+      @output += "# Auto Generated Features\n"
       @output += "# Generated: #{Time.now.to_s}\n"
       @output += "# Source File: #{@filename}\n\n"
     end

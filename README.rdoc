@@ -21,6 +21,8 @@ Add the following lines of code tyo you capybara/cucumber env.rb file
   require 'factory_toys'
   FactoryToys.update_features
 
+Updated System to only update file if the source has changed (does not handle file deletion)
+
 === Configuration Options:
 
 Set the Directory to read the configuration files from
