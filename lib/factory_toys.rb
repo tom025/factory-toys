@@ -36,7 +36,7 @@ module FactoryToys
     end
 
     def update_required(file, output_file)
-      File.open(output_file) {|f| return "# last update: #{File.mtime(file)}" != f.readline}
+      File.open(output_file) {|f| return "# last update: #{File.mtime(file)}\n" != f.readline}
     rescue
       true
     end

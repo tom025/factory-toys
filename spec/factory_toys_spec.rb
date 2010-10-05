@@ -67,7 +67,22 @@ describe "FactoryToys" do
         FileUtils.rm_r(FactoryToys.features_location + '/*', :force => true)
         FactoryToys.update_features
       end
+
+      it 'does not override file if no change' do
+        Object.send(:remove_const, :RAILS_ROOT)
+        path = File.dirname(__FILE__)
+        path += Dir.pwd + '/' unless path[0..0] == '/'
+        Object.const_set(:RAILS_ROOT, path + '/../tmp')
+        FileUtils.rm_r(FactoryToys.features_location + '/*', :force => true)
+        FactoryToys.update_features
+        init_files = Dir.glob(FactoryToys.features_location + '/*.feature').map{|f| [f, File.open(f){|file| file.read}]}
+        FactoryToys.update_features
+        new_files = Dir.glob(FactoryToys.features_location + '/*.feature').map{|f| [f, File.open(f){|file| file.read}]}
+
+        init_files.first.last.should == new_files.first.last
+      end
     end
+
   end
 
 end
