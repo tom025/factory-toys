@@ -31,7 +31,7 @@ describe "FactoryToys" do
       end
 
       it 'calls Process FFactory for each file' do
-        factory = mock(:fact1, :write => true)
+        factory = mock(:fact1, :write => true, :output_filename => '')
         FactoryToys.stub!(:source_files).and_return(['file1', 'file2'])
         FactoryToys::FFactory.should_receive(:new).with('file1').and_return(factory)
         FactoryToys::FFactory.should_receive(:new).with('file2').and_return(factory)
@@ -39,7 +39,7 @@ describe "FactoryToys" do
       end
 
       it 'calls write for each file' do
-        factory = mock(:fact1)
+        factory = mock(:fact1, :output_filename => '')
         FactoryToys.stub!(:source_files).and_return(['file1', 'file2'])
         FactoryToys::FFactory.stub!(:new).and_return(factory)
         factory.should_receive(:write).and_return(true)

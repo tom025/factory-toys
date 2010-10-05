@@ -9,9 +9,13 @@ Spec::Runner.configure do |config|
   
 end
 
-SETTLEMENT_METHODS = [DCC_DCC = {:buy => 'dcc from dcc', :to => 'dcc to dcc'},
-                      REG_REG = {:buy => 'reg from reg', :to => 'reg to reg'}
-                      ]
+begin
+  SETTLEMENT_METHODS
+rescue
+  SETTLEMENT_METHODS = [DCC_DCC = {:buy => 'dcc from dcc', :to => 'dcc to dcc'},
+                        REG_REG = {:buy => 'reg from reg', :to => 'reg to reg'}
+                        ]
+end
 
 #implemented here to get tests to pass as in Rails Environment and not ruby core??
 class String

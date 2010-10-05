@@ -35,8 +35,8 @@ module FactoryToys
       return "Source Directory Does not exist: #{self.source_directory}"
     end
 
-    def update_required(file)
-      File.open(file) {|f| return "#last update: #{File.mtime(file)}" != f.readline}
+    def update_required(file, output_file)
+      File.open(output_file) {|f| return "# last update: #{File.mtime(file)}" != f.readline}
     rescue
       true
     end
@@ -44,8 +44,8 @@ module FactoryToys
     public
     def update_features
       self.source_files.each do |file|
-        if self.update_required(file)
-          ft = FactoryToys::FFactory.new(file)
+        ft = FactoryToys::FFactory.new(file)
+        if self.update_required(file, ft.output_filename)
           ft.write
         end
       end

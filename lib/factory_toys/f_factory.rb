@@ -11,16 +11,19 @@ module FactoryToys
 
     def initialize(filename)
       @filename = filename
-
-      @output = "#last update: #{File.mtime(@file_name)}"
+      @output = "# last update: #{File.mtime(@filename)}\n"
       @output += "# Auto Generated Features\n"
       @output += "# Generated: #{Time.now.to_s}\n"
       @output += "# Source File: #{@filename}\n\n"
     end
 
-    def write
+    def output_filename
       filename = File.basename(@filename, '.rb') + '.feature'
-      File.open(FactoryToys.features_location + "/" + filename, 'w') do |f|
+      FactoryToys.features_location + "/" + filename
+    end
+
+    def write
+      File.open(self.output_filename, 'w') do |f|
         f.puts self.output
       end
     end

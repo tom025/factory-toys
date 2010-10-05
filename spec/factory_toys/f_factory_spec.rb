@@ -4,6 +4,7 @@ require 'spec_helper'
 describe FactoryToys::FFactory do
   before do
     Object.const_set(:RAILS_ROOT, File.dirname(__FILE__) + '/../../tmp') unless Object.const_defined?(:RAILS_ROOT)
+    File.stub!(:mtime).and_return('testfile')
   end
 
   context '#new' do
