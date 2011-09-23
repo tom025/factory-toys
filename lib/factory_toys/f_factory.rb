@@ -48,14 +48,11 @@ module FactoryToys
       FileUtils.mkdir_p(dir)
       FileUtils.rm_r(Dir.glob(File.join(dir, "*.feature")))
 
-      @outputs.each_with_index do |output, i|
-        File.open(File.join(dir, "#{filename}_#{i}.feature"), 'w') do |f|
-          begin
-            f.puts (@header + output).join("\n")
-          rescue Exception => e
-            puts e
-            (debugger; puts '????')
-          end
+      @outputs.each_with_index do |output, i|        
+        output_file_name = File.join(dir, "#{filename}_#{i}.feature")
+        File.open(output_file_name, 'w') do |f|
+          output_str = (@header + output).join("\n")
+          f.puts output_str
         end
       end
     end
@@ -87,7 +84,7 @@ module FactoryToys
       scenario_name = self.get_scenario_name(feature_name)
       raise MissingScenarioError, scenario_name unless self.data[scenario_name]
       eval(self.data[scenario_name])
-      @output << eval(scenario_name.to_s)
+      @output += eval(scenario_name.to_s).split("\n")
       @output << ''
       check_output_length
     end

@@ -30,7 +30,7 @@ module FactoryToys
 
     protected
     def source_files
-      Dir.glob(self.source_location + '/*.rb')
+      Dir[File.join(self.source_location, '*.rb')]
     rescue Errno::ENOENT => e
       return "Source Directory Does not exist: #{self.source_directory}"
     end
