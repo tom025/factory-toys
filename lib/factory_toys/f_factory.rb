@@ -50,7 +50,12 @@ module FactoryToys
 
       @outputs.each_with_index do |output, i|
         File.open(File.join(dir, "#{filename}_#{i}.feature"), 'w') do |f|
-          f.puts (@header + output).join("\n") rescue (debugger; puts '????')
+          begin
+            f.puts (@header + output).join("\n")
+          rescue Exception => e
+            puts e
+            (debugger; puts '????')
+          end
         end
       end
     end
