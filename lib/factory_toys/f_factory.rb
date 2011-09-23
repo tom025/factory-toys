@@ -11,35 +11,55 @@ module FactoryToys
 
     def initialize(filename)
       @filename = filename
-      @output = "# last update: #{File.mtime(@filename)}\n"
-      @output += "# Auto Generated Features\n"
-      @output += "# Generated: #{Time.now.to_s}\n"
-      @output += "# Source File: #{@filename}\n\n"
-    end
-
-    def output_filename
-      filename = File.basename(@filename, '.rb') + '.feature'
-      FactoryToys.features_location + "/" + filename
-    end
-
-    def write
-      File.open(self.output_filename, 'w') do |f|
-        f.puts self.output
-      end
+      @header = ["# last update: #{File.mtime(@filename)}"]
+      @header << "# Auto Generated Features"
+      @header << "# Generated: #{Time.now.to_s}"
+      @header << "# Source File: #{@filename}"
+      @header << ''
+      check_output_length
     end
     
-    def output
+    def check_output_length
+      @outputs ||= []
+      unless @output && @output.size > 400
+        @output = []
+        @outputs << @output
+      end
+    end
+
+    def process_files
       eval(self.data[:base])
       self.add_feature(self.data[:feature])
       conf_names = self.instance_variables
       self.process_file(conf_names)
-      @output
     end
+       
+    def output_filename
+      filename = File.basename(@filename, ".rb")
+      dir = FactoryToys.features_location + filename
+      File.join(dir, "#{filename}_0.feature")
+    end
+    
+    def write
+      process_files
+      
+      filename = File.basename(@filename, ".rb")
+      dir = File.join(FactoryToys.features_location, filename)
+      FileUtils.mkdir_p(dir)
+      FileUtils.rm_r(Dir.glob(File.join(dir, "*.feature")))
 
+      @outputs.each_with_index do |output, i|
+        File.open(File.join(dir, "#{filename}_#{i}.feature"), 'w') do |f|
+          f.puts (@header + output).join("\n")
+        end
+      end
+    end
+    
     def add_feature(feature_def)
       raise FactoryToys::MissingFeatureDefinitionError if feature_def.blank?
       eval(feature_def)
-      @output += eval('feature') + "\n\n"
+      @header << eval('feature')
+      @header << ""
     end
 
     def process_file(conf_names)
@@ -62,7 +82,9 @@ module FactoryToys
       scenario_name = self.get_scenario_name(feature_name)
       raise MissingScenarioError, scenario_name unless self.data[scenario_name]
       eval(self.data[scenario_name])
-      @output += eval(scenario_name.to_s) + "\n\n"
+      @output << eval(scenario_name.to_s)
+      @output << ''
+      check_output_length
     end
 
     def get_scenario_name(feature_name)
