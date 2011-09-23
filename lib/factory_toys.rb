@@ -11,6 +11,7 @@ module FactoryToys
     attr_accessor :features_directory, :source_directory
     attr_accessor :factories
     attr_accessor :scenario, :scenarios
+    attr_accessor :max_feature_length
 
     def factories
       @factories ||= []
@@ -60,3 +61,4 @@ FactoryToys.scenarios = 'feature'
 FactoryToys.scenario = 'scenario'
 FactoryToys.features_directory = 'features'
 FactoryToys.source_directory = 'ffactories'
+FactoryToys.max_feature_length = 60

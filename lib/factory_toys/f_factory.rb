@@ -21,7 +21,7 @@ module FactoryToys
     
     def check_output_length
       @outputs ||= []
-      unless @output && @output.size < 400
+      unless @output && @output.size < FactoryToys.max_feature_length
         @outputs << @output if @output
         @output = []
       end
